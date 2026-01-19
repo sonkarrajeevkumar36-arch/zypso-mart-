@@ -18,7 +18,7 @@ onAuthStateChanged(auth, (user) => {
 
   if (user) {
     // 🔓 USER LOGGED IN
-    authBtn.innerHTML = "⎋"; // Logout icon
+    authBtn.innerHTML = "🚪"; // Logout icon
     myOrdersBtn.style.display = "flex";
 
     authBtn.onclick = () => {
@@ -235,4 +235,5 @@ document.getElementById('switch-mode').onclick = () => {
     } else {
         title.innerText = "Login"; submitBtn.innerText = "Login"; modeBtn.innerText = "New here? Register";
     }
+
 };
