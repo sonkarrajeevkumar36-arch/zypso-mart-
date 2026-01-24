@@ -35,7 +35,10 @@ window.initAdmin = () => {
                     </select>
                 </td>
                 <td>₹${p.price}/${p.unit}</td>
-                <td><button onclick="editProduct('${p.id}')">Edit</button> <button onclick="deleteProduct('${p.id}')" style="color:red">Del</button></td>
+                <td>
+                    <button onclick="editProduct('${p.id}')">Edit</button> 
+                    <button onclick="deleteProduct('${p.id}')" style="color:red">Del</button>
+                </td>
             </tr>`).join('');
     });
 
@@ -62,29 +65,58 @@ function renderOrders() {
         if(end && d > new Date(end + 'T23:59:59')) return false;
         return true;
     }).map(o => {
-        // Revenue Rules: Only delivered. Exclude Cancelled/Returns.
+
+        // Revenue calculation
         if(o.status === 'delivered') {
-            rev += o.total;
-            o.items.forEach(i => sold += i.qty);
+            rev += o.total || 0;
+            (o.items || []).forEach(i => sold += i.qty || 0);
         }
-        const timeStr = o.createdAt ? o.createdAt.toDate().toLocaleDateString() : "...";
+
+        // Date & Time
+        let dateStr = "N/A";
+        let timeStr = "N/A";
+        if(o.createdAt) {
+            const d = o.createdAt.toDate();
+            dateStr = d.toLocaleDateString();
+            timeStr = d.toLocaleTimeString();
+        }
+
+        // Customer details fallback
+        const cname = o.customerName || "Unknown";
+        const cphone = o.customerPhone || "No Phone";
+        const caddress = o.customerAddress || "No Address";
+
+        // Product + Quantity list
+        const itemsList = (o.items && o.items.length > 0)
+            ? o.items.map(i => `${i.name} (x${i.qty})`).join(', ')
+            : "No Items";
+
         return `
             <tr>
-                <td>${timeStr}</td>
-                <td>${o.customerName}</td>
-                <td>₹${o.total}</td>
+                <td>
+                    ${dateStr}<br>
+                    <small>${timeStr}</small>
+                </td>
+                <td>
+                    <b>${cname}</b><br>
+                    <small>${cphone}</small><br>
+                    <small>${caddress}</small><br>
+                    <small style="color:#2563eb">${itemsList}</small>
+                </td>
+                <td>₹${o.total || 0}</td>
                 <td><span class="status-tag status-${o.status}">${o.status}</span></td>
                 <td>
-                    <select onchange="upStatus('${o.id}', this.value)" style="width:100px; font-size:10px;">
+                    <select onchange="upStatus('${o.id}', this.value)" style="width:110px; font-size:10px;">
                         <option value="pending" ${o.status==='pending'?'selected':''}>Pending</option>
                         <option value="delivered" ${o.status==='delivered'?'selected':''}>Delivered</option>
                         <option value="cancelled" ${o.status==='cancelled'?'selected':''}>Cancelled</option>
                         <option value="return_pending" ${o.status==='return_pending'?'selected':''}>Return Req</option>
-                        <option value="returned" ${o.status==='returned'?'selected':''}>Accepted/Returned</option>
+                        <option value="returned" ${o.status==='returned'?'selected':''}>Returned</option>
                     </select>
                 </td>
             </tr>`;
     }).join('');
+
     document.getElementById('total-rev-val').innerText = '₹' + rev;
     document.getElementById('total-sold-val').innerText = sold;
 }
@@ -127,10 +159,13 @@ window.addProduct = async () => {
     const price = parseInt(document.getElementById('p-price').value);
     if(name && price) {
         await addDoc(collection(db, "products"), { 
-            name, price, unit: document.getElementById('p-unit').value, 
+            name, 
+            price, 
+            unit: document.getElementById('p-unit').value, 
             imageUrl: document.getElementById('p-img').value, 
             category: document.getElementById('p-category').value, 
-            status: 'Available', createdAt: serverTimestamp() 
+            status: 'Available', 
+            createdAt: serverTimestamp() 
         });
         alert("Product Added");
     }
@@ -141,5 +176,10 @@ window.addCategory = async () => {
     if(n) await addDoc(collection(db, "categories"), { name: n });
 };
 
-window.deleteProduct = async (id) => { if(confirm("Delete Product?")) await deleteDoc(doc(db, "products", id)); };
-window.deleteCategory = async (id) => { if(confirm("Delete Category?")) await deleteDoc(doc(db, "categories", id)); };
+window.deleteProduct = async (id) => { 
+    if(confirm("Delete Product?")) await deleteDoc(doc(db, "products", id)); 
+};
+
+window.deleteCategory = async (id) => { 
+    if(confirm("Delete Category?")) await deleteDoc(doc(db, "categories", id)); 
+};
