@@ -12,7 +12,7 @@ body { font-family: 'Inter', sans-serif; margin: 0; background: var(--light); pa
 /* Fixed Layout Containers */
 .container { max-width: 500px; margin: 0 auto; padding: 0 15px; }
 
-.app-header { background: var(--white); padding: 12px 0; position: fixed; top: 0; left: 0; right: 0; z-index: 1000; box-shadow: var(--shadow); }
+.app-header { background: var(--white); padding: 12px 0; position: fixed; top: 0; left: 0; right: 0; z-index: 1000; box-shadow: var(--shadow); color: var(--primary);}
 .logo-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
 #app-logo { height: 35px; width: auto; }
 
@@ -62,3 +62,4 @@ body { font-family: 'Inter', sans-serif; margin: 0; background: var(--light); pa
 
 
 @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
