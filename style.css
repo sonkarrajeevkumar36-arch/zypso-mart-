@@ -28,7 +28,7 @@ body { font-family: 'Inter', sans-serif; margin: 0; background: var(--light); pa
 
 /* Product Cards */
 .product-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding-bottom: 30px; }
-.product-card { background: white; padding: 12px; border-radius: 15px; box-shadow: var(--shadow); text-align: center; position: relative; transition: 0.2s; }
+.product-card { background: white; padding: 12px; border-radius: 15px; box-shadow: var(--shadow); text-align: center; position: relative; transition: 0.2s; color: var(--primary); }
 .product-img { width: 100%; height: 100px; object-fit: contain; margin-bottom: 10px; }
 .status-badge { position: absolute; top: 8px; right: 8px; background: var(--danger); color: white; font-size: 9px; padding: 3px 8px; border-radius: 50px; font-weight: bold; }
 .out-of-stock { opacity: 0.6; pointer-events: none; }
@@ -59,5 +59,6 @@ body { font-family: 'Inter', sans-serif; margin: 0; background: var(--light); pa
 .status-cancelled { background: #fee2e2; color: #ef4444; }
 .status-return_pending { background: #e0e7ff; color: #4338ca; }
 .status-returned { background: #f1f5f9; color: #64748b; }
+
 
 @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
